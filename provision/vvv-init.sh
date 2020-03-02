@@ -125,6 +125,13 @@ initial_wpconfig() {
   noroot wp core config --dbname="${DB_NAME}" --dbuser=wp --dbpass=wp  --extra-php <<PHP
 define( 'WP_DEBUG', true );
 define( 'SCRIPT_DEBUG', true );
+// https://wpvip.com/documentation/vip-go/local-vip-go-development-environment/
+define( 'DISALLOW_FILE_EDIT', true );
+define( 'DISALLOW_FILE_MODS', true );
+define( 'AUTOMATIC_UPDATER_DISABLED', true );
+if ( file_exists( __DIR__ . '/wp-content/vip-config/vip-config.php' ) ) {
+    require_once( __DIR__ . '/wp-content/vip-config/vip-config.php' );
+}
 PHP
 }
 
@@ -196,6 +203,14 @@ else
   if [[ ! -f "${VVV_PATH_TO_SITE}/public_html/wp-load.php" ]]; then
     download_wordpress "${VVV_PATH_TO_SITE}/public_html" "${WP_VERSION}" "${WP_LOCALE}"
   fi
+
+  # 2020-03-02 bd808: hacking in manual steps from https://wpvip.com/documentation/vip-go/local-vip-go-development-environment/
+  VVV_CONTENT="${VVV_PATH_TO_SITE}/public_html/wp-content"
+  rm -rf "${VVV_CONTENT}"
+  git clone git@github.com:bd808/wpvip-wikimedia-techblog.git "${VVV_CONTENT}"
+  git clone git@github.com:Automattic/vip-go-mu-plugins.git --recursive "${VVV_CONTENT}/mu-plugins"
+  cd "${VVV_CONTENT}/mu-plugins" && git submodule update --init --recursive
+  ln -s "${VVV_CONTENT}/mu-plugins/drop-ins/object-cache/object-cache.php" "${VVV_CONTENT}/object-cache.php"
 
   if [[ ! -f "${VVV_PATH_TO_SITE}/public_html/wp-config.php" ]]; then
     initial_wpconfig
