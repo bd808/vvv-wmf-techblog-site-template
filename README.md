@@ -19,12 +19,12 @@ YAML config file
 sites:
   techblog.wikimedia.org:
     skip_provisioning: false
-    description: "Testing for wpvip managed WordPress blog"
+    description: "Develop/test techblog.wikimedia.org"
     hosts:
       - techblog.local.wmftest.net
     repo: https://github.com/bd808/vvv-wmf-techblog-site-template.git
     custom:
-      site_title: "News from the Wikimedia technical movement"
+      site_title: "[[WM:TECHBLOG]]"
       install_test_content: false
 
 utilities:
