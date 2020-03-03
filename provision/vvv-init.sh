@@ -206,11 +206,15 @@ else
 
   # 2020-03-02 bd808: hacking in manual steps from https://wpvip.com/documentation/vip-go/local-vip-go-development-environment/
   VVV_CONTENT="${VVV_PATH_TO_SITE}/public_html/wp-content"
-  rm -rf "${VVV_CONTENT}"
-  git clone git@github.com:bd808/wpvip-wikimedia-techblog.git "${VVV_CONTENT}"
-  git clone git@github.com:Automattic/vip-go-mu-plugins.git --recursive "${VVV_CONTENT}/mu-plugins"
-  cd "${VVV_CONTENT}/mu-plugins" && git submodule update --init --recursive
-  ln -s "${VVV_CONTENT}/mu-plugins/drop-ins/object-cache/object-cache.php" "${VVV_CONTENT}/object-cache.php"
+  if [[ ! -d "${VVV_CONTENT}/vip-config" ]]; then
+    rm -rf "${VVV_CONTENT}"
+    # FIXME(2020-03-02): make this configurable so folks can use various forks
+    git clone git@github.com:bd808/wpvip-wikimedia-techblog.git "${VVV_CONTENT}"
+    (cd "${VVV_CONTENT}" && git submodule update --init --recursive)
+    git clone git@github.com:Automattic/vip-go-mu-plugins.git --recursive "${VVV_CONTENT}/mu-plugins"
+    (cd "${VVV_CONTENT}/mu-plugins" && git submodule update --init --recursive)
+    ln -s "${VVV_CONTENT}/mu-plugins/drop-ins/object-cache/object-cache.php" "${VVV_CONTENT}/object-cache.php"
+  fi
 
   if [[ ! -f "${VVV_PATH_TO_SITE}/public_html/wp-config.php" ]]; then
     initial_wpconfig
