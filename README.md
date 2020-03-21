@@ -17,15 +17,18 @@ YAML config file
 ```yaml
 ---
 sites:
-  techblog.wikimedia.org:
+  techblog:
     skip_provisioning: false
     description: "Develop/test techblog.wikimedia.org"
     hosts:
-      - techblog.local.wmftest.net
+      - techblog.test
     repo: https://github.com/bd808/vvv-wmf-techblog-site-template.git
     custom:
       site_title: "[[WM:TECHBLOG]]"
       install_test_content: false
+      install_themes:
+        # Our custom deployment doesn't include a "default" theme
+        - twentytwenty
 
 utilities:
   core: # The core VVV utility
